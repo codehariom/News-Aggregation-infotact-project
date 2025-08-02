@@ -1,8 +1,14 @@
 import React from 'react'
+import Login from './page/login'
+
 
 function App() {
   return (
-    <div className='text-4xl'>App</div>
+<>
+
+<Login/>
+
+</>
   )
 }
 
