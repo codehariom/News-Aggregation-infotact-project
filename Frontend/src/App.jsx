@@ -1,15 +1,12 @@
-import React from 'react'
-import Login from './page/login'
-
+import React from "react";
+import Home from "./page/Home";
 
 function App() {
   return (
-<>
-
-<Login/>
-
-</>
-  )
+    <>
+      <Home />
+    </>
+  );
 }
 
-export default App
+export default App;
