@@ -1,29 +1,81 @@
-import React from "react";
+
+import React from 'react';
+// import  a  from 'react-router-dom'; // Named import for a
 
 function Home() {
   return (
-    <div className=" h-screen place-content-center justify-center place-items-center">
-      <div className=" text-center mb-6 ">
-        <h2 className="text-6xl font-semibold">Welcome To News Aggregation </h2>
-      </div>
-      <div className=" justify-center items-center text-center mb-6">
-        <p className=" text-lg text-gray-500  mb-6">
-          A community-driven platform to combat <br /> misinformation through
-          collaborative fact-checking
-        </p>
-        <div className=" text-center place-content-center min-w-max ">
-          <p className=" bg-gray-200 py-2 text-black rounded-full ">
-            With More Feature
+    <div className="min-h-screen bg-[url('/bg.jpg')] bg-cover bg-center text-white">
+      {/* Hero Section */}
+      <div className="flex flex-col items-center justify-center min-h-screen bg-black bg-opacity-50">
+        <div className="text-center px-4 sm:px-6 lg:px-8">
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 tracking-tight">
+            Welcome to News Aggregator
+          </h1>
+          <p className="text-lg sm:text-xl lg:text-2xl text-gray-200 mb-8 max-w-2xl mx-auto">
+            Join our community-driven platform to combat misinformation through collaborative fact-checking, transparent source scoring, and real-time news updates.
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              to="/news"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full transition duration-300"
+            >
+              Explore News Feed
+            </a>
+            <a
+              to="/register"
+              className="bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-semibold py-3 px-8 rounded-full transition duration-300"
+            >
+              Join Now
+            </a>
+          </div>
         </div>
       </div>
-      <div className=" mt-10 ">
-        <a
-          href="http://"
-          className=" bg-black text-white py-4 px-8 rounded-full "
-        >
-          Explore News Feeds
-        </a>
+
+      {/* Features Section */}
+      <div className="bg-gray-900 py-16">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
+            Why Choose Our Platform?
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+              <h3 className="text-xl font-semibold mb-4">Community Fact-Checking</h3>
+              <p className="text-gray-300">
+                Collaborate with users to verify claims, submit evidence, and ensure news accuracy through transparent annotations.
+              </p>
+            </div>
+            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+              <h3 className="text-xl font-semibold mb-4">Source Reliability</h3>
+              <p className="text-gray-300">
+                Access real-time reliability scores for news sources based on community-driven fact-checking outcomes.
+              </p>
+            </div>
+            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+              <h3 className="text-xl font-semibold mb-4">Real-Time Updates</h3>
+              <p className="text-gray-300">
+                Stay informed with instant notifications for new articles and fact-check updates tailored to your interests.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Call to Action Section */}
+      <div className="bg-blue-600 py-16">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-6">
+            Be Part of the Truth
+          </h2>
+          <p className="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
+            Sign up to contribute to a trustworthy news ecosystem. Submit articles, fact-check claims, and earn reputation points.
+          </p>
+          <a
+            to="/register"
+            className="bg-white text-blue-600 hover:bg-gray-200 font-semibold py-3 px-8 rounded-full transition duration-300"
+          >
+            Get Started
+          </a>
+        </div>
       </div>
     </div>
   );
