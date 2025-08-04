@@ -16,6 +16,7 @@ function App() {
       <Login/>
       <Register/>
      <UserProfile/>
+     
     </>
   );
 }
