@@ -4,9 +4,9 @@ import React from 'react';
 
 function Home() {
   return (
-    <div className="min-h-screen bg-[url('/bg.jpg')] bg-cover bg-center text-white">
+    <div className="min-h-screen bg-black text-white">
       {/* Hero Section */}
-      <div className="flex flex-col items-center justify-center min-h-screen bg-black bg-opacity-50">
+      <div className="flex flex-col items-center justify-center min-h-screen ">
         <div className="text-center px-4 sm:px-6 lg:px-8">
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 tracking-tight">
             Welcome to News Aggregator
@@ -17,13 +17,14 @@ function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               to="/news"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full transition duration-300"
+              target="_blank"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full transition cursor-pointer  duration-300"
             >
               Explore News Feed
             </a>
             <a
               to="/register"
-              className="bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-semibold py-3 px-8 rounded-full transition duration-300"
+              className="bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-semibold py-3 px-8 cursor-pointer rounded-full transition duration-300"
             >
               Join Now
             </a>
@@ -71,7 +72,7 @@ function Home() {
           </p>
           <a
             to="/register"
-            className="bg-white text-blue-600 hover:bg-gray-200 font-semibold py-3 px-8 rounded-full transition duration-300"
+            className="bg-white text-blue-600 hover:bg-gray-200 font-semibold py-3 px-8 rounded-full transition cursor-pointer duration-300"
           >
             Get Started
           </a>
