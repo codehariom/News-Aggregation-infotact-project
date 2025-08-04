@@ -1,17 +1,19 @@
 
 import React from 'react';
+import Navbar from '../components/Navbar';
 // import  a  from 'react-router-dom'; // Named import for a
 
 function Home() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero Section */}
+      <Navbar/>
       <div className="flex flex-col items-center justify-center min-h-screen ">
         <div className="text-center px-4 sm:px-6 lg:px-8">
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 tracking-tight">
             Welcome to News Aggregator
           </h1>
-          <p className="text-lg sm:text-xl lg:text-2xl text-gray-200 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl lg:text-2xl text-gray-200 mb-8 tracking-wider max-w-2xl mx-auto">
             Join our community-driven platform to combat misinformation through collaborative fact-checking, transparent source scoring, and real-time news updates.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
