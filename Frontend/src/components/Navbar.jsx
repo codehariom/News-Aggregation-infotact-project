@@ -1,36 +1,85 @@
-import React from "react";
-// import logo from '../assets/logo.png';
-import { Link,useNavigate } from "react-router-dom";
-import  useAuth  from "../service/UseAuth";
+import React, { useState, useEffect } from 'react';
+// import { a, } from 'react-router-dom';
+import axios from 'axios';
 
-function Navbar() {
-    const navigate = useNavigate();
+const Navbar = () => {
+  const [user, setUser] = useState(null);
+//   const navigate = useNavigate();
 
-    const { isAuthenticated, logout } = useAuth();
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios
+        .get('http://localhost:5000/auth/me', {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => setUser(res.data))
+        .catch(() => {
+          setUser(null);
+          localStorage.removeItem('token');
+        });
+    }
+  }, []);
 
-    return (
-        <div className="px-10 justify-center items-center relative bg-white">
-            <nav className="flex justify-between max-auto py-4 items-center">
-                <div className="w-35">
-                    <Link to="/">Infotact News Aggregation </Link>
-                </div>
-                <div className="flex gap-5 mx-5">
-                    {!isAuthenticated ? (
-                        <>
-                            <button onClick={() => navigate("/login")} className="bg-white border-2 border-black rounded-[6px] w-[130px] h-[40px] hover:bg-black hover:text-white">Login</button>
-                            <button onClick={() => navigate("/register")} className="bg-black text-white rounded-[6px] w-[130px] h-[40px] hover:border-black hover:border-2 hover:bg-white hover:text-black">Register Now</button>
-                        </>
-                    ) : (
-                        <>
-                            <button onClick={() => navigate("/dashboard")} className="bg-white border-2 border-black rounded-[6px] w-[130px] h-[40px] hover:bg-black hover:text-white">Dashboard</button>
-                            <button onClick={() => navigate("/profile")} className="bg-white border-2 border-black rounded-[6px] w-[130px] h-[40px] hover:bg-black hover:text-white">Profile</button>
-                            <button onClick={() => { logout(); navigate("/login"); }} className="bg-white border-2 border-black rounded-[6px] w-[130px] h-[40px] hover:bg-black hover:text-white">Logout</button>
-                        </>
-                    )}
-                </div>
-            </nav>
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+    // navigate('/login');
+  };
+
+  return (
+    <nav className="bg-blue-600 text-white p-4 shadow-lg">
+      <div className="container mx-auto flex justify-between items-center">
+        <a to="/" className="text-2xl font-bold tracking-tight">
+          News Aggregator
+        </a>
+        <div className="flex space-x-4 items-center">
+          {user ? (
+            <>
+              <a to="/categories" className="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">
+                Categories
+              </a>
+              <a to="/fact-check" className="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">
+                Dashboard
+              </a>
+              <a to="/profile" className="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">
+                User Account
+              </a>
+              <a to="/submit" className="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">
+                Submit Article
+              </a>
+              {user.role === 'admin' && (
+                <a
+                  to="/admin/dashboard"
+                  className="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300"
+                >
+                  Admin Dashboard
+                </a>
+              )}
+              <button
+                onClick={handleLogout}
+                className="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <a to="/news" className="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">
+                News Feed
+              </a>
+              <a to="/login" className="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">
+                Login
+              </a>
+              <a to="/register" className="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">
+                Register
+              </a>
+            </>
+          )}
         </div>
-    );
-}
+      </div>
+    </nav>
+  );
+};
 
 export default Navbar;
