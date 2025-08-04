@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import Chart from 'chart.js/auto';
+import axios from 'axios';
 
 const Dashboard = () => {
   const [theme, setTheme] = useState('light');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const contentRef = useRef(null);
-  const sourceRef = useRef(null);
-  const userGrowthRef = useRef(null);
+  const [user, setUser] = useState(null);
 
+  // Static metrics (replace with backend API calls, e.g., /api/metrics)
   const metrics = {
     totalUsers: 1250,
     totalArticles: 320,
@@ -19,85 +18,88 @@ const Dashboard = () => {
     sourceManagement: { active: 50, inactive: 10 },
   };
 
+  // Static notifications (replace with backend API calls, e.g., /api/notifications)
   const notifications = [
     { id: 1, message: 'New user registered: John Doe', time: '2 mins ago' },
     { id: 2, message: 'Article pending review: AI Trends 2025', time: '10 mins ago' },
     { id: 3, message: 'Source debunk pending: Fake News Alert', time: '1 hour ago' },
   ];
 
+  // Fetch user data and verify admin role
   useEffect(() => {
-    if (contentRef.current) {
-      new Chart(contentRef.current, {
-        type: 'pie',
-        data: {
-          labels: ['Pending', 'Approved', 'Rejected'],
-          datasets: [{
-            data: [
-              metrics.contentModeration.pending,
-              metrics.contentModeration.approved,
-              metrics.contentModeration.rejected,
-            ],
-            backgroundColor: ['#FFBB38', '#4CAF50', '#F44336'],
-          }],
-        },
-        options: { responsive: true },
-      });
-    }
-
-    if (sourceRef.current) {
-      new Chart(sourceRef.current, {
-        type: 'bar',
-        data: {
-          labels: ['Active', 'Inactive'],
-          datasets: [{
-            label: 'Sources',
-            data: [
-              metrics.sourceManagement.active,
-              metrics.sourceManagement.inactive,
-            ],
-            backgroundColor: ['#2196F3', '#9E9E9E'],
-          }],
-        },
-        options: { responsive: true },
-      });
-    }
-
-    if (userGrowthRef.current) {
-      new Chart(userGrowthRef.current, {
-        type: 'line',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-          datasets: [{
-            label: 'User Growth',
-            data: [200, 300, 450, 600, 900, 1250],
-            borderColor: '#4CAF50',
-            fill: false,
-          }],
-        },
-        options: { responsive: true },
-      });
-    }
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/auth/me', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        const userData = response.data;
+        if (userData.role !== 'admin') {
+          alert('Access denied: Admin role required');
+          localStorage.removeItem('token');
+          return;
+        }
+        setUser(userData);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        localStorage.removeItem('token');
+        alert('Session expired. Please log in again.');
+      }
+    };
+    fetchUserData();
   }, []);
 
+  // Validation schema for settings form
   const validationSchema = Yup.object({
     username: Yup.string()
       .min(3, 'Username must be at least 3 characters')
       .required('Username is required'),
     password: Yup.string()
       .min(6, 'Password must be at least 6 characters')
-      .required('Password is required'),
+      .optional(),
     theme: Yup.string()
       .oneOf(['light', 'dark'], 'Invalid theme')
       .required('Theme is required'),
   });
 
-  const handleSettingsSubmit = (values, { setSubmitting }) => {
-    setTheme(values.theme);
-    // Simulate API call to update username/password
-    console.log('Settings updated:', values);
-    setIsSettingsOpen(false);
-    setSubmitting(false);
+  // Handle settings form submission
+  const handleSettingsSubmit = async (values, { setSubmitting }) => {
+    try {
+      setTheme(values.theme);
+      const updateData = { username: values.username };
+      if (values.password) {
+        updateData.password = values.password;
+      }
+      await axios.put('http://localhost:5000/auth/profile', updateData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      setUser({ ...user, username: values.username });
+      setIsSettingsOpen(false);
+    } catch (error) {
+      console.error('Error updating settings:', error);
+      alert('Failed to update settings. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+    alert('Logged out successfully');
+  };
+
+  // If no user or not admin, show restricted message
+  if (user) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+        <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+          <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
+          <p>Please log in with an admin account to view the dashboard.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`min-h-screen ${theme === 'light' ? 'bg-gray-100' : 'bg-gray-900 text-white'} p-6`}>
@@ -106,13 +108,13 @@ const Dashboard = () => {
         <div className="flex gap-4">
           <button
             onClick={() => setIsSettingsOpen(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300"
           >
             Settings
           </button>
           <button
-            onClick={() => alert('Logged out')}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition duration-300"
           >
             Logout
           </button>
@@ -121,10 +123,10 @@ const Dashboard = () => {
 
       {isSettingsOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className={`${theme === 'light' ? 'bg-white' : 'bg-gray-800'} p-6 rounded-lg w-96`}>
+          <div className={`${theme === 'light' ? 'bg-white' : 'bg-gray-800 text-white'} p-6 rounded-lg w-96`}>
             <h2 className="text-xl font-bold mb-4">Settings</h2>
             <Formik
-              initialValues={{ username: '', password: '', theme }}
+              initialValues={{ username: user?.username || '', password: '', theme }}
               validationSchema={validationSchema}
               onSubmit={handleSettingsSubmit}
             >
@@ -135,7 +137,7 @@ const Dashboard = () => {
                     <Field
                       as="select"
                       name="theme"
-                      className="w-full p-2 border rounded text-black"
+                      className={`w-full p-2 border rounded ${theme === 'light' ? 'text-black' : 'text-white bg-gray-700'}`}
                     >
                       <option value="light">Light</option>
                       <option value="dark">Dark</option>
@@ -147,28 +149,37 @@ const Dashboard = () => {
                     <Field
                       type="text"
                       name="username"
-                      className="w-full p-2 border rounded text-black"
+                      className={`w-full p-2 border rounded ${theme === 'light' ? 'text-black' : 'text-white bg-gray-700'}`}
                       placeholder="Update Username"
                     />
                     <ErrorMessage name="username" component="div" className="text-red-500 text-sm mt-1" />
                   </div>
                   <div>
-                    <label htmlFor="password" className="block mb-1">Password</label>
+                    <label htmlFor="password" className="block mb-1">Password (leave blank to keep unchanged)</label>
                     <Field
                       type="password"
                       name="password"
-                      className="w-full p-2 border rounded text-black"
+                      className={`w-full p-2 border rounded ${theme === 'light' ? 'text-black' : 'text-white bg-gray-700'}`}
                       placeholder="New Password"
                     />
                     <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
                   </div>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 disabled:bg-green-400"
-                  >
-                    Save & Close
-                  </button>
+                  <div className="flex space-x-4">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition duration-300 disabled:bg-green-400"
+                    >
+                      {isSubmitting ? 'Saving...' : 'Save & Close'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsSettingsOpen(false)}
+                      className="w-full bg-gray-500 text-white py-2 rounded hover:bg-gray-600 transition duration-300"
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </Form>
               )}
             </Formik>
@@ -196,17 +207,19 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div className={`${theme === 'light' ? 'bg-white' : 'bg-gray-800'} p-6 rounded-lg shadow`}>
           <h3 className="text-lg font-semibold mb-4">Content Moderation Status</h3>
-          <canvas ref={contentRef} height="200"></canvas>
+          <div className="space-y-2">
+            <p><strong>Pending:</strong> {metrics.contentModeration.pending}</p>
+            <p><strong>Approved:</strong> {metrics.contentModeration.approved}</p>
+            <p><strong>Rejected:</strong> {metrics.contentModeration.rejected}</p>
+          </div>
         </div>
         <div className={`${theme === 'light' ? 'bg-white' : 'bg-gray-800'} p-6 rounded-lg shadow`}>
           <h3 className="text-lg font-semibold mb-4">Source Management</h3>
-          <canvas ref={sourceRef} height="200"></canvas>
+          <div className="space-y-2">
+            <p><strong>Active:</strong> {metrics.sourceManagement.active}</p>
+            <p><strong>Inactive:</strong> {metrics.sourceManagement.inactive}</p>
+          </div>
         </div>
-      </div>
-
-      <div className={`${theme === 'light' ? 'bg-white' : 'bg-gray-800'} p-6 rounded-lg shadow mb-6`}>
-        <h3 className="text-lg font-semibold mb-4">User Growth Trend</h3>
-        <canvas ref={userGrowthRef} height="200"></canvas>
       </div>
 
       <div className={`${theme === 'light' ? 'bg-white' : 'bg-gray-800'} p-6 rounded-lg shadow`}>
