@@ -35,7 +35,16 @@ const UserDashboard = () => {
         const response = await axios.get('/api/user/profile', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
-        setUser(response.data);
+
+        // Ensure contribution & history are arrays
+        setUser({
+          name: response.data.name || '',
+          email: response.data.email || '',
+          role: response.data.role || '',
+          reputationScore: response.data.reputationScore || 0,
+          contribution: response.data.contribution || [],
+          history: response.data.history || [],
+        });
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -90,7 +99,7 @@ const UserDashboard = () => {
             <div>
               <h2 className="text-lg font-semibold">Contributions</h2>
               <ul className="list-disc pl-5">
-                {user.contribution.map((item, index) => (
+                {(user.contribution || []).map((item, index) => (
                   <li key={index}>{item}</li>
                 ))}
               </ul>
@@ -98,7 +107,7 @@ const UserDashboard = () => {
             <div>
               <h2 className="text-lg font-semibold">History</h2>
               <ul className="list-disc pl-5">
-                {user.history.map((item, index) => (
+                {(user.history || []).map((item, index) => (
                   <li key={index}>{item}</li>
                 ))}
               </ul>
