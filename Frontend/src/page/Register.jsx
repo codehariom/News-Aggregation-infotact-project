@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React, { useState } from "react";
 import FactCheckForm from "../components/FactCheckForm";
 import FactCheckCard from "../components/FactCheckCard";
@@ -76,6 +77,8 @@ const FactCheckInterface = () => {
 
 export default FactCheckInterface;
 =======
+=======
+>>>>>>> 08dd369930b411f8028c5dcb9abbc60c1f2d46b4
 import React, { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
@@ -208,5 +211,9 @@ const Register = () => {
   );
 };
 
+<<<<<<< HEAD
+export default Register;
+>>>>>>> 08dd369930b411f8028c5dcb9abbc60c1f2d46b4
+=======
 export default Register;
 >>>>>>> 08dd369930b411f8028c5dcb9abbc60c1f2d46b4
