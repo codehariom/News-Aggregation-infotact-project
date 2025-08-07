@@ -70,7 +70,7 @@ const AnnotationForm = () => {
         : new Date(b.date) - new Date(a.date)
     );
     setAnnotations(sorted);
-  }, [sortOrder]);
+  },[sortOrder] );
 
   const handleSubmit = (e) => {
     e.preventDefault();
