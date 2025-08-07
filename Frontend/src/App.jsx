@@ -7,6 +7,9 @@ import UserProfile from "./page/UserProfile";
 import Dashboard from "./page/AdminDashabord";
 import NewsFeed from "./page/NewsFeed";
 import ArticleDetails from "./page/ArticleDeatails";
+import FactCheckInterface from "./components/FactCheckingInterface";
+import AnnotationForm from "./components/AnnotationForm";
+import SourceReliability from "./page/SourceReliability";
 
  
 function App() {
@@ -19,6 +22,9 @@ function App() {
       <Dashboard/>
       <NewsFeed/>
       <ArticleDetails/>
+      <FactCheckInterface/>
+      <AnnotationForm/>
+      <SourceReliability/>
      
     </>
   );
