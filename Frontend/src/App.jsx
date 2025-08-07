@@ -3,6 +3,7 @@ import Home from "./page/Home";
 import Login from "./page/Login";
 import Register from "./page/Register";
 
+
 import UserProfile from "./page/UserProfile";
 import Dashboard from "./page/AdminDashabord";
 import NewsFeed from "./page/NewsFeed";
@@ -13,6 +14,9 @@ import SourceReliability from "./page/SourceReliability";
 import SourceManagement from "./page/SourceManagement";
 
  
+
+import UserDashboard from "./page/UserDashboard";
+
 function App() {
   return (
     <>

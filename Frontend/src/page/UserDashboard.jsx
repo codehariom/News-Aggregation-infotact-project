@@ -38,7 +38,16 @@ const UserProfile = () => {
         const response = await axios.get('http://localhost:5000/auth/me', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
-        setUser(response.data);
+
+        // Ensure contribution & history are arrays
+        setUser({
+          name: response.data.name || '',
+          email: response.data.email || '',
+          role: response.data.role || '',
+          reputationScore: response.data.reputationScore || 0,
+          contribution: response.data.contribution || [],
+          history: response.data.history || [],
+        });
       } catch (error) {
         console.error('Error fetching user data:', error);
         localStorage.removeItem('token');
@@ -100,6 +109,7 @@ const UserProfile = () => {
             <div>
               <h2 className="text-lg font-semibold">Subscriptions</h2>
               <ul className="list-disc pl-5">
+
                 {user.subscriptions && user.subscriptions.length > 0 ? (
                   user.subscriptions.map((item, index) => (
                     <li key={index} className="text-gray-600">{item}</li>
@@ -107,6 +117,19 @@ const UserProfile = () => {
                 ) : (
                   <li className="text-gray-600">No subscriptions</li>
                 )}
+
+                {(user.contribution || []).map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold">History</h2>
+              <ul className="list-disc pl-5">
+                {(user.history || []).map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+
               </ul>
             </div>
             <button
