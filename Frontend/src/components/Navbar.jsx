@@ -42,6 +42,12 @@ const Navbar = () => {
               <a to="/fact-check" className="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">
                 Dashboard
               </a>
+              <a to="/source-reliability" className="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">
+                Source Reliability
+              </a>
+              <a to="/source-management" className="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">
+                Source Management
+              </a>
               <a to="/profile" className="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">
                 User Account
               </a>

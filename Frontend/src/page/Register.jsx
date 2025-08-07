@@ -11,14 +11,14 @@ const LoginSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email address')
     .required('Email is required'),
-     name: Yup.string()
-    .required('Name is required'),
+  username: Yup.string()
+    .required('Username is required'),
   password: Yup.string()
     .min(6, 'Password must be at least 6 characters')
     .required('Password is required'),
 });
 
-const Register = () => {
+const Login = () => {
   // const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false);
 
@@ -29,7 +29,6 @@ const Register = () => {
       // navigate('/news');
     } catch (error) {
       setFieldError('email', 'Invalid email or password',error);
-      setFieldError('name', 'Invalid email or password',error);
       setFieldError('password', 'Invalid email or password',error);
     } finally {
       setSubmitting(false);
@@ -39,7 +38,7 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-center mb-6">Register Now </h1>
+        <h1 className="text-3xl font-bold text-center mb-6">Register Here </h1>
         <Formik
           initialValues={{ email: '', password: '' }}
           validationSchema={LoginSchema}
@@ -47,19 +46,19 @@ const Register = () => {
         >
           {({ isSubmitting }) => (
             <Form className="space-y-4">
-                <div>
-                <label htmlFor="Name" className="block text-sm font-medium text-gray-700">
-                  Name
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Username
                 </label>
                 <Field
                   type="text"
-                  name="name"
-                  id="name"
+                  name="username"
+                  id="username"
                   className="w-full p-2 border rounded-md "
-                  placeholder="Enter your Name"
+                  placeholder="Enter your Username"
                 />
                 <ErrorMessage
-                  name="name"
+                  name="username"
                   component="div"
                   className="text-red-500 text-sm mt-1"
                 />
@@ -114,13 +113,13 @@ const Register = () => {
                 disabled={isSubmitting}
                 className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300 disabled:bg-blue-400"
               >
-                {isSubmitting ? 'Register ...' : 'Register'}
+                {isSubmitting ? 'Register in...' : 'Register Now'}
               </button>
             </Form>
           )}
         </Formik>
         <p className="text-center text-sm text-gray-600 mt-4">
-           Login to Your Account{' '}
+          Login your account {' '}
           <a href="/register" className="text-blue-600 hover:underline">
             Login
           </a>
@@ -130,4 +129,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;
