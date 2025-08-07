@@ -10,6 +10,7 @@ import ArticleDetails from "./page/ArticleDeatails";
 import FactCheckInterface from "./components/FactCheckingInterface";
 import AnnotationForm from "./components/AnnotationForm";
 import SourceReliability from "./page/SourceReliability";
+import SourceManagement from "./page/SourceManagement";
 
  
 function App() {
@@ -25,6 +26,7 @@ function App() {
       <FactCheckInterface/>
       <AnnotationForm/>
       <SourceReliability/>
+      <SourceManagement/>
      
     </>
   );
