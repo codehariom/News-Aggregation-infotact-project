@@ -110,6 +110,7 @@ const UserProfile = () => {
               <h2 className="text-lg font-semibold">Subscriptions</h2>
               <ul className="list-disc pl-5">
 
+
                 {user.subscriptions && user.subscriptions.length > 0 ? (
                   user.subscriptions.map((item, index) => (
                     <li key={index} className="text-gray-600">{item}</li>
@@ -129,6 +130,8 @@ const UserProfile = () => {
                 {(user.history || []).map((item, index) => (
                   <li key={index}>{item}</li>
                 ))}
+
+
 
               </ul>
             </div>
@@ -238,4 +241,6 @@ const UserProfile = () => {
   );
 };
 
+
 export default UserProfile;
+
