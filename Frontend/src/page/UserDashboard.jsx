@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -26,10 +25,12 @@ const UserProfile = () => {
     role: '',
     reputation: 0,
     subscriptions: [],
+    contribution: [],
+    history: [],
   });
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  // const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   // Fetch user data on component mount
   useEffect(() => {
@@ -39,19 +40,19 @@ const UserProfile = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
 
-        // Ensure contribution & history are arrays
         setUser({
-          name: response.data.name || '',
+          username: response.data.username || '',
           email: response.data.email || '',
           role: response.data.role || '',
-          reputationScore: response.data.reputationScore || 0,
+          reputation: response.data.reputationScore || 0,
+          subscriptions: response.data.subscriptions || [],
           contribution: response.data.contribution || [],
           history: response.data.history || [],
         });
       } catch (error) {
         console.error('Error fetching user data:', error);
+        setError('Failed to fetch user data. Please try again.');
         localStorage.removeItem('token');
-        // navigate('/login');
       }
     };
     fetchUserData();
@@ -61,31 +62,48 @@ const UserProfile = () => {
   const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
     try {
       const updateData = { ...values };
-      if (!values.password) delete updateData.password; // Omit password if unchanged
-      await axios.put('http://localhost:5000/auth/profile', updateData, {
+      if (!values.password) delete updateData.password;
+      const response = await axios.put('http://localhost:5000/auth/profile', updateData, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      setUser({ ...user, ...updateData });
+      setUser({ ...user, ...response.data });
       setIsEditing(false);
       setShowPassword(false);
+      setError(null);
     } catch (error) {
       console.error('Error updating profile:', error);
-      setFieldError('email', 'Error updating profile');
+      setFieldError('email', error.response?.data?.message || 'Error updating profile');
+      setError(error.response?.data?.message || 'Error updating profile');
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   // Handle logout
   const handleLogout = () => {
     localStorage.removeItem('token');
-    setUser(null);
-    // navigate('/login');
+    setUser({
+      username: '',
+      email: '',
+      role: '',
+      reputation: 0,
+      subscriptions: [],
+      contribution: [],
+      history: [],
+    });
+    setError(null);
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
         <h1 className="text-3xl font-bold mb-6 text-center">User Profile Dashboard</h1>
+
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
 
         {/* User Info Display */}
         {!isEditing ? (
@@ -109,7 +127,6 @@ const UserProfile = () => {
             <div>
               <h2 className="text-lg font-semibold">Subscriptions</h2>
               <ul className="list-disc pl-5">
-
                 {user.subscriptions && user.subscriptions.length > 0 ? (
                   user.subscriptions.map((item, index) => (
                     <li key={index} className="text-gray-600">{item}</li>
@@ -117,19 +134,30 @@ const UserProfile = () => {
                 ) : (
                   <li className="text-gray-600">No subscriptions</li>
                 )}
-
-                {(user.contribution || []).map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold">Contributions</h2>
+              <ul className="list-disc pl-5">
+                {user.contribution && user.contribution.length > 0 ? (
+                  user.contribution.map((item, index) => (
+                    <li key={index} className="text-gray-600">{item}</li>
+                  ))
+                ) : (
+                  <li className="text-gray-600">No contributions</li>
+                )}
               </ul>
             </div>
             <div>
               <h2 className="text-lg font-semibold">History</h2>
               <ul className="list-disc pl-5">
-                {(user.history || []).map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-
+                {user.history && user.history.length > 0 ? (
+                  user.history.map((item, index) => (
+                    <li key={index} className="text-gray-600">{item}</li>
+                  ))
+                ) : (
+                  <li className="text-gray-600">No history</li>
+                )}
               </ul>
             </div>
             <button
@@ -215,6 +243,7 @@ const UserProfile = () => {
                     onClick={() => {
                       setIsEditing(false);
                       setShowPassword(false);
+                      setError(null);
                     }}
                     className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-300"
                   >
