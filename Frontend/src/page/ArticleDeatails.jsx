@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { useParams, useNavigate } from 'react-router-dom';
 
 // Validation schema for annotation form
 const annotationSchema = Yup.object({
@@ -16,9 +17,8 @@ const ArticleDetails = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Extract article ID from URL (assuming manual URL parsing since no react-router-dom)
-  const articleId = window.location.pathname.split('/').pop();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
   // Fetch user data and article details
   useEffect(() => {
@@ -38,11 +38,11 @@ const ArticleDetails = () => {
         }
 
         // Fetch article details
-        const articleResponse = await axios.get(`http://localhost:5000/api/articles/${articleId}`);
+        const articleResponse = await axios.get(`http://localhost:5000/api/articles/${id}`);
         setArticle(articleResponse.data);
 
         // Fetch annotations
-        const annotationsResponse = await axios.get(`http://localhost:5000/api/annotations/${articleId}`);
+        const annotationsResponse = await axios.get(`http://localhost:5000/api/annotations/${id}`);
         setAnnotations(annotationsResponse.data);
         setError(null);
       } catch (error) {
@@ -53,17 +53,17 @@ const ArticleDetails = () => {
       }
     };
     fetchData();
-  }, [articleId]);
+  }, [id]);
 
   // Handle annotation submission
   const handleAnnotationSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       await axios.post(
-        `http://localhost:5000/api/annotations/${articleId}`,
+        `http://localhost:5000/api/annotations/${id}`,
         { content: values.content },
         { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
-      const annotationsResponse = await axios.get(`http://localhost:5000/api/annotations/${articleId}`);
+      const annotationsResponse = await axios.get(`http://localhost:5000/api/annotations/${id}`);
       setAnnotations(annotationsResponse.data);
       resetForm();
       alert('Annotation submitted successfully');
@@ -130,9 +130,12 @@ const ArticleDetails = () => {
           <strong>Reliability Score:</strong> {article.reliabilityScore || 0}
         </p>
         <p className="text-gray-800 mb-4">{article.content || 'No content available.'}</p>
-        <a href="/news" className="text-blue-600 hover:underline">
+        <button 
+          onClick={() => navigate('/news-feed')} 
+          className="text-blue-600 hover:underline cursor-pointer"
+        >
           Back to News Feed
-        </a>
+        </button>
       </div>
 
       {/* Annotations Section */}

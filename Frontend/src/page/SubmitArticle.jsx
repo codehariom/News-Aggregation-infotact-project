@@ -16,6 +16,7 @@ const validationSchema = Yup.object({
   title: Yup.string().min(5, 'Title must be at least 5 characters').required('Required'),
   summary: Yup.string().min(10, 'Too short').max(200, 'Max 200 chars').required('Required'),
   content: Yup.string().min(20, 'Content too short').required('Required'),
+  sourceUrl: Yup.string().url('Must be a valid URL').required('Source URL is required'),
   category: Yup.string().required('Select a category'),
   tags: Yup.string(),
   publishDate: Yup.date().required('Pick a date'),
@@ -29,6 +30,7 @@ export default function SubmitArticleForm() {
     title: '',
     summary: '',
     content: '',
+    sourceUrl: '',
     category: '',
     tags: '',
     publishDate: new Date().toISOString().slice(0, 10),
@@ -42,6 +44,7 @@ export default function SubmitArticleForm() {
       formData.append('title', values.title);
       formData.append('summary', values.summary);
       formData.append('content', values.content);
+      formData.append('sourceUrl', values.sourceUrl);
       formData.append('category', values.category);
       formData.append('tags', values.tags);
       formData.append('publishDate', values.publishDate);
@@ -99,6 +102,12 @@ export default function SubmitArticleForm() {
                   <div className={errorClass}><ErrorMessage name="content" /></div>
                 </div>
 
+                <div>
+                  <label className={labelClass}>Source URL</label>
+                  <Field name="sourceUrl" type="url" placeholder="https://example.com/article" className={inputClass} />
+                  <div className={errorClass}><ErrorMessage name="sourceUrl" /></div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className={labelClass}>Category</label>
@@ -135,8 +144,6 @@ export default function SubmitArticleForm() {
                     Reset
                   </button>
                 </div>
-
-                <p className="text-sm text-gray-500">Tip: tags should be comma-separated. Image is optional.</p>
               </Form>
             )}
           </Formik>
