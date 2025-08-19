@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
+// import axios from 'axios';
 
 const categories = [
   'News',
@@ -16,6 +16,7 @@ const validationSchema = Yup.object({
   title: Yup.string().min(5, 'Title must be at least 5 characters').required('Required'),
   summary: Yup.string().min(10, 'Too short').max(200, 'Max 200 chars').required('Required'),
   content: Yup.string().min(20, 'Content too short').required('Required'),
+  sourceUrl: Yup.string().url('Must be a valid URL').required('Source URL is required'),
   category: Yup.string().required('Select a category'),
   tags: Yup.string(),
   publishDate: Yup.date().required('Pick a date'),
@@ -23,16 +24,16 @@ const validationSchema = Yup.object({
 });
 
 export default function SubmitArticleForm() {
-  const [previewSrc, setPreviewSrc] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
   const initialValues = {
     title: '',
     summary: '',
     content: '',
+    sourceUrl: '',
     category: '',
     tags: '',
-    publishDate: new Date().toISOString().slice(0, 10), // yyyy-mm-dd
+    publishDate: new Date().toISOString().slice(0, 10),
     image: null,
   };
 
@@ -43,15 +44,16 @@ export default function SubmitArticleForm() {
       formData.append('title', values.title);
       formData.append('summary', values.summary);
       formData.append('content', values.content);
+      formData.append('sourceUrl', values.sourceUrl);
       formData.append('category', values.category);
       formData.append('tags', values.tags);
       formData.append('publishDate', values.publishDate);
       if (values.image) formData.append('image', values.image);
 
       // NOTE: change the URL to match your backend route
-      const res = await axios.post('/api/articles', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      // const res = await axios.post('/api/articles', formData, {
+      //   headers: { 'Content-Type': 'multipart/form-data' },
+      // });
 
       alert('Article submitted successfully');
       resetForm();
@@ -64,102 +66,89 @@ export default function SubmitArticleForm() {
     }
   }
 
+  const inputClass = 'block w-full rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white';
+  const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
+  const errorClass = 'text-red-600 text-sm mt-1';
+
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">Submit New Article</h2>
+    <div className="min-h-screen bg-white">
+      <header className="border-b border-gray-200">
+        <div className="max-w-3xl mx-auto px-6 py-6">
+          <h1 className="text-2xl font-semibold text-gray-900">Submit Article</h1>
+          <p className="text-sm text-gray-500 mt-1">Provide clear, concise details. Fields marked required must be completed.</p>
+        </div>
+      </header>
 
-      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-        {({ setFieldValue, values }) => (
-          <Form className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium mb-1">Title</label>
-              <Field name="title" placeholder="Article title" className="w-full border rounded-md p-2" />
-              <div className="text-red-600 text-sm mt-1"><ErrorMessage name="title" /></div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Summary</label>
-              <Field as="textarea" name="summary" rows="3" placeholder="Short summary (max 200 chars)" className="w-full border rounded-md p-2" />
-              <div className="text-red-600 text-sm mt-1"><ErrorMessage name="summary" /></div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Content</label>
-              <Field as="textarea" name="content" rows="8" placeholder="Write your article here..." className="w-full border rounded-md p-2" />
-              <div className="text-red-600 text-sm mt-1"><ErrorMessage name="content" /></div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div>
-                <label className="block text-sm font-medium mb-1">Category</label>
-                <Field as="select" name="category" className="w-full border rounded-md p-2">
-                  <option value="">-- Select --</option>
-                  {categories.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </Field>
-                <div className="text-red-600 text-sm mt-1"><ErrorMessage name="category" /></div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Tags</label>
-                <Field name="tags" placeholder="comma,separated,tags" className="w-full border rounded-md p-2" />
-                <div className="text-red-600 text-sm mt-1"><ErrorMessage name="tags" /></div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Publish Date</label>
-                <Field name="publishDate" type="date" className="w-full border rounded-md p-2" />
-                <div className="text-red-600 text-sm mt-1"><ErrorMessage name="publishDate" /></div>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Featured Image</label>
-              <input
-                name="image"
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.currentTarget.files[0];
-                  setFieldValue('image', file);
-                  if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (ev) => setPreviewSrc(ev.target.result);
-                    reader.readAsDataURL(file);
-                  } else {
-                    setPreviewSrc(null);
-                  }
-                }}
-                className="w-full"
-              />
-              <div className="text-red-600 text-sm mt-1"><ErrorMessage name="image" /></div>
-
-              {previewSrc && (
-                <div className="mt-3">
-                  <div className="text-sm font-medium mb-1">Preview</div>
-                  <img src={previewSrc} alt="Preview" className="max-h-40 rounded-md object-cover" />
+      <main className="max-w-3xl mx-auto px-6 py-6">
+        <div className="border border-gray-200 rounded-lg p-6 bg-white">
+          <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+            {() => (
+              <Form className="space-y-6">
+                <div>
+                  <label className={labelClass}>Title</label>
+                  <Field name="title" placeholder="Article title" className={inputClass} />
+                  <div className={errorClass}><ErrorMessage name="title" /></div>
                 </div>
-              )}
-            </div>
 
-            <div className="flex items-center gap-3">
-              <button type="submit" disabled={submitting} className="px-4 py-2 rounded-lg bg-indigo-600 text-white font-medium disabled:opacity-60">
-                {submitting ? 'Submitting...' : 'Submit Article'}
-              </button>
+                <div>
+                  <label className={labelClass}>Summary</label>
+                  <Field as="textarea" name="summary" rows="3" placeholder="Short summary (max 200 chars)" className={inputClass} />
+                  <div className={errorClass}><ErrorMessage name="summary" /></div>
+                </div>
 
-              <button type="button" onClick={() => {
-                // reset by emitting a DOM reset signal — Formik resetForm is better done in submit outcome.
-                // simple page reload to clear everything quickly (optional)
-                // window.location.reload();
-                alert('Use the form reset button in your UI or let the submit handler reset.');
-              }} className="px-3 py-2 rounded-lg border">Reset</button>
-            </div>
+                <div>
+                  <label className={labelClass}>Content</label>
+                  <Field as="textarea" name="content" rows="8" placeholder="Write your article here..." className={inputClass} />
+                  <div className={errorClass}><ErrorMessage name="content" /></div>
+                </div>
 
-            <div className="text-sm text-gray-500 mt-2">Tip: tags should be comma-separated. Image is optional.</div>
-          </Form>
-        )}
-      </Formik>
+                <div>
+                  <label className={labelClass}>Source URL</label>
+                  <Field name="sourceUrl" type="url" placeholder="https://example.com/article" className={inputClass} />
+                  <div className={errorClass}><ErrorMessage name="sourceUrl" /></div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className={labelClass}>Category</label>
+                    <Field as="select" name="category" className={inputClass}>
+                      <option value="">-- Select --</option>
+                      {categories.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </Field>
+                    <div className={errorClass}><ErrorMessage name="category" /></div>
+                  </div>
+
+                  <div>
+                    <label className={labelClass}>Tags</label>
+                    <Field name="tags" placeholder="comma,separated,tags" className={inputClass} />
+                    <div className={errorClass}><ErrorMessage name="tags" /></div>
+                  </div>
+
+                  <div>
+                    <label className={labelClass}>Publish Date</label>
+                    <Field name="publishDate" type="date" className={inputClass} />
+                    <div className={errorClass}><ErrorMessage name="publishDate" /></div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button type="submit" disabled={submitting} className="px-4 py-2 rounded-md bg-blue-600 text-white font-medium disabled:opacity-60">
+                    {submitting ? 'Submitting...' : 'Submit Article'}
+                  </button>
+                  <button
+                    type="reset"
+                    onClick={() => setPreviewSrc(null)}
+                    className="px-4 py-2 rounded-md border border-gray-300 text-gray-700"
+                  >
+                    Reset
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </main>
     </div>
   );
 }

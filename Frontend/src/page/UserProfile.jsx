@@ -1,11 +1,20 @@
 
 import React, { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { IoEye } from 'react-icons/io5';
 import { FaEyeSlash } from 'react-icons/fa6';
+import {
+
+  FaBell,
+  FaSignOutAlt,
+  FaEdit,
+  FaCheck,
+  FaTimes,
+  FaChartLine,
+  FaShieldAlt
+} from 'react-icons/fa';
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
@@ -27,10 +36,17 @@ const UserProfile = () => {
     role: '',
     reputation: 0,
     subscriptions: [],
+    joinDate: '2024-01-15',
+    articlesSubmitted: 0,
+    factChecksCompleted: 0,
+    sourcesVerified: 0,
+    lastActive: '2024-12-19',
   });
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  // const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('overview');
+  const [isVisible, setIsVisible] = useState(false);
+
 
   // Fetch user data on component mount
   useEffect(() => {
@@ -43,23 +59,27 @@ const UserProfile = () => {
       } catch (error) {
         console.error('Error fetching user data:', error);
         localStorage.removeItem('token');
-        // navigate('/login');
       }
     };
+
+    setIsVisible(true);
     fetchUserData();
   }, []);
 
   // Handle form submission
-  const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
+  const handleSubmit = async (values, { setSubmitting, setFieldError, setStatus }) => {
     try {
       const updateData = { ...values };
-      if (!values.password) delete updateData.password; // Omit password if unchanged
+      if (!values.password) delete updateData.password;
+
       await axios.put('http://localhost:5000/auth/profile', updateData, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
+
       setUser({ ...user, ...updateData });
       setIsEditing(false);
       setShowPassword(false);
+      setStatus({ success: 'Profile updated successfully!' });
     } catch (error) {
       console.error('Error updating profile:', error);
       setFieldError('email', 'Error updating profile');
@@ -71,146 +91,201 @@ const UserProfile = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     setUser(null);
-    // navigate('/login');
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-        <h1 className="text-3xl font-bold mb-6 text-center">User Profile Dashboard</h1>
+    <div className="min-h-screen">
+      <div className="relative z-10 container mx-auto px-4 py-8">
+        {/* Header Section */}
+        <div className={`text-center mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h1 className="text-5xl  font-bold  mb-4">
+            User Profile
+          </h1>
+          <p className="text-xl text-gray-400">Manage your account and track your progress</p>
+        </div>
 
-        {/* User Info Display */}
-        {!isEditing ? (
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-lg font-semibold">Username</h2>
-              <p>{user.username || 'N/A'}</p>
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold">Email</h2>
-              <p>{user.email || 'N/A'}</p>
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold">Role</h2>
-              <p>{user.role || 'N/A'}</p>
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold">Reputation</h2>
-              <p>{user.reputation || 0}</p>
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold">Subscriptions</h2>
-              <ul className="list-disc pl-5">
-                {user.subscriptions && user.subscriptions.length > 0 ? (
-                  user.subscriptions.map((item, index) => (
-                    <li key={index} className="text-gray-600">{item}</li>
-                  ))
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Left Sidebar - User Info */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Profile Card */}
+            <div className="bg-gray-300 backdrop-blur-sm rounded-2xl p-6 border border-white/10 shadow-2xl">
+              <div className="text-center">
+                <div className="w-24 h-24 mx-auto mb-4 bg-black rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                  {user.username?.charAt(0)?.toUpperCase() || 'U'}
+                </div>
+                <h2 className="text-2xl font-bold text-black mb-2">{user.username || 'Username'}</h2>
+                <p className="text-gray-700 mb-4">{user.role || 'User'}</p>
+
+                {!isEditing ? (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="w-full bg-blue-700 text-white px-4 py-2 rounded-xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
+                  >
+                    <FaEdit className="mr-2" />
+                    Edit Profile
+                  </button>
                 ) : (
-                  <li className="text-gray-600">No subscriptions</li>
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="w-full bg-green-600 text-white px-4 py-2 rounded-xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
+                    >
+                      <FaCheck className="mr-2" />
+                      Save Changes
+                    </button>
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="w-full bg-gray-600 text-white px-4 py-2 rounded-xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
+                    >
+                      <FaTimes className="mr-2" />
+                      Cancel
+                    </button>
+                  </div>
                 )}
-              </ul>
+              </div>
             </div>
+            {/* Logout Button */}
             <button
-              onClick={() => setIsEditing(true)}
-              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
+              onClick={handleLogout}
+              className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2 rounded-xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
             >
-              Edit Profile
+              <FaSignOutAlt className="mr-2" />
+              Logout
             </button>
           </div>
-        ) : (
-          /* Formik Form for Editing */
-          <Formik
-            initialValues={{
-              username: user.username || '',
-              email: user.email || '',
-              password: '',
-            }}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ isSubmitting }) => (
-              <Form className="space-y-4">
-                <div>
-                  <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                    Username
-                  </label>
-                  <Field
-                    type="text"
-                    name="username"
-                    id="username"
-                    className="mt-1 p-2 w-full border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Enter your username"
-                  />
-                  <ErrorMessage name="username" component="div" className="text-red-500 text-sm mt-1" />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    Email
-                  </label>
-                  <Field
-                    type="email"
-                    name="email"
-                    id="email"
-                    className="mt-1 p-2 w-full border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Enter your email"
-                  />
-                  <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
-                </div>
-                <div className="relative">
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                    Password (leave blank to keep unchanged)
-                  </label>
-                  <Field
-                    type={showPassword ? 'text' : 'password'}
-                    name="password"
-                    id="password"
-                    className="mt-1 p-2 w-full border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Enter new password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-2 top-9 text-gray-500 hover:text-gray-700"
-                  >
-                    {showPassword ? (
-                      <FaEyeSlash className="h-5 w-5" />
-                    ) : (
-                      <IoEye className="h-5 w-5" />
-                    )}
-                  </button>
-                  <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
-                </div>
-                <div className="flex space-x-4">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-300 disabled:bg-green-400"
-                  >
-                    {isSubmitting ? 'Saving...' : 'Save Changes'}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsEditing(false);
-                      setShowPassword(false);
-                    }}
-                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-300"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </Form>
-            )}
-          </Formik>
-        )}
 
-        {/* Logout Button */}
-        <button
-          onClick={handleLogout}
-          className="mt-6 w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300"
-        >
-          Logout
-        </button>
+          {/* Right Side - Main Content */}
+          <div className="lg:col-span-3 space-y-6">
+
+            {/* Tab Content */}
+            <div className="bg-gray-100 backdrop-blur-sm rounded-2xl p-6 border border-white/10 shadow-2xl min-h-96">
+              {/* Overview Tab */}
+              {activeTab === 'overview' && (
+                <div className="space-y-6">
+                  <h3 className="text-2xl font-bold text-black mb-6">Profile Overview</h3>
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-black rounded-xl p-4 border border-gray-600">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-gray-400 text-sm">Total Reputation</p>
+                          <p className="text-3xl font-bold text-yellow-400">{user.reputation || 0}</p>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div className="bg-black rounded-xl p-4 border border-gray-600">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-gray-400 text-sm">Member Since</p>
+                          <p className="text-xl font-bold text-blue-400">{user.joinDate || 'N/A'}</p>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div className=" bg-black rounded-xl p-4 border border-gray-600">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-gray-400 text-sm">Last Active</p>
+                          <p className="text-xl font-bold text-green-400">{user.lastActive || 'N/A'}</p>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div className="bg-black rounded-xl p-4 border border-gray-600">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-gray-400 text-sm">Subscriptions</p>
+                          <p className="text-xl font-bold text-purple-400">{user.subscriptions?.length || 0}</p>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Profile Form (when editing) */}
+                  {isEditing && (
+                    <div className="bg-white rounded-xl p-6 border border-gray-600">
+                      <h4 className="text-xl font-bold text-black mb-4">Edit Profile</h4>
+                      <Formik
+                        initialValues={{
+                          username: user.username || '',
+                          email: user.email || '',
+                          password: '',
+                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={handleSubmit}
+                      >
+                        {({ isSubmitting, status }) => (
+                          <Form className="space-y-4">
+                            <div>
+                              <label htmlFor="username" className="block text-sm font-medium text-black mb-2">
+                                Username
+                              </label>
+                              <Field
+                                type="text"
+                                name="username"
+                                id="username"
+                                className="w-full px-4 py-3  border border-gray-500 rounded-xl  placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                placeholder="Enter your username"
+                              />
+                              <ErrorMessage name="username" component="div" className="text-red-400 text-sm mt-1" />
+                            </div>
+
+                            <div>
+                              <label htmlFor="email" className="block text-sm font-medium text-black mb-2">
+                                Email
+                              </label>
+                              <Field
+                                type="email"
+                                name="email"
+                                id="email"
+                                className="w-full px-4 py-3  border border-gray-500 rounded-xl  placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                placeholder="Enter your email"
+                              />
+                              <ErrorMessage name="email" component="div" className="text-red-400 text-sm mt-1" />
+                            </div>
+
+                            <div className="relative">
+                              <label htmlFor="password" className="block text-sm font-medium text-black mb-2">
+                                New Password (optional)
+                              </label>
+                              <Field
+                                type={showPassword ? 'text' : 'password'}
+                                name="password"
+                                id="password"
+                                className="w-full px-4 py-3  border border-gray-500 rounded-xl  placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                placeholder="Enter new password"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-10 text-gray-400 hover:text-black transition-colors"
+                              >
+                                {showPassword ? <FaEyeSlash className="h-5 w-5" /> : <IoEye className="h-5 w-5" />}
+                              </button>
+                              <ErrorMessage name="password" component="div" className="text-red-400 text-sm mt-1" />
+                            </div>
+
+                            {status?.success && (
+                              <div className="bg-green-500/20 border border-green-500/50 rounded-xl p-4 text-green-400 text-center">
+                                🎉 {status.success}
+                              </div>
+                            )}
+                          </Form>
+                        )}
+                      </Formik>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
