@@ -140,3 +140,7 @@ When adding new features:
 2. Ensure fallback behavior works without backend
 3. Test with and without network connectivity
 4. Update this README with new demo data features
+
+
+<!-- password G7Fz2EOurI46nW8W -->
+<!-- username hariomtruthseek -->

@@ -16,8 +16,6 @@ import {
   FaThumbsUp,
   FaThumbsDown,
   FaFlag,
-  FaShare,
-  FaBookmark,
   FaChartBar,
   FaLightbulb,
   FaShieldAlt,
@@ -58,7 +56,6 @@ const FactCheckInterface = () => {
       verifiedBy: "Climate Expert Team",
       verificationDate: "2024-12-19T14:20:00Z",
       confidence: 95,
-      views: 1247,
       upvotes: 89,
       downvotes: 12,
       tags: ["climate", "science", "data", "verification"]
@@ -77,7 +74,6 @@ const FactCheckInterface = () => {
       verifiedBy: "Economic Analysis Team",
       verificationDate: "2024-12-19T09:15:00Z",
       confidence: 87,
-      views: 892,
       upvotes: 67,
       downvotes: 23,
       tags: ["economics", "GDP", "government", "verification"]
@@ -96,7 +92,6 @@ const FactCheckInterface = () => {
       verifiedBy: null,
       verificationDate: null,
       confidence: 0,
-      views: 567,
       upvotes: 34,
       downvotes: 8,
       tags: ["health", "vaccines", "misinformation", "CDC"]
@@ -119,7 +114,6 @@ const FactCheckInterface = () => {
         verifiedBy: null,
         verificationDate: null,
         confidence: 0,
-        views: 0,
         upvotes: 0,
         downvotes: 0,
         tags: []
@@ -215,8 +209,6 @@ const FactCheckInterface = () => {
       case "priority":
         const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
         return priorityOrder[b.priority] - priorityOrder[a.priority];
-      case "views":
-        return b.views - a.views;
       case "confidence":
         return b.confidence - a.confidence;
       default:
@@ -477,7 +469,6 @@ const FactCheckInterface = () => {
                 >
                   <option value="date">Sort by Date</option>
                   <option value="priority">Sort by Priority</option>
-                  <option value="views">Sort by Views</option>
                   <option value="confidence">Sort by Confidence</option>
                 </select>
               </div>
@@ -534,10 +525,7 @@ const FactCheckInterface = () => {
                           <FaCalendar />
                           {formatDate(check.date)}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <FaEye />
-                          {formatNumber(check.views)} views
-                        </span>
+                        {/* Views removed */}
                       </div>
                     </div>
                   </div>
@@ -604,16 +592,7 @@ const FactCheckInterface = () => {
                       <FaThumbsDown />
                       <span className="font-medium">{formatNumber(check.downvotes)}</span>
                     </button>
-                    
-                    <button className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors">
-                      <FaBookmark />
-                      <span className="font-medium">Save</span>
-                    </button>
-                    
-                    <button className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors">
-                      <FaShare />
-                      <span className="font-medium">Share</span>
-                    </button>
+                    {/* Save/Share removed */}
                   </div>
                   
                   {check.status === "pending" && (

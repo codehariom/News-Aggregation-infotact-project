@@ -11,8 +11,7 @@ import {
   FaPlus,
   FaEye,
   FaCrown,
-  FaBell,
-  FaBookmark
+  FaBell
 } from 'react-icons/fa';
 
 const Navbar = () => {
@@ -104,13 +103,7 @@ const Navbar = () => {
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
                 </button>
 
-                {/* Bookmarks */}
-                <a
-                  to="/bookmarks"
-                  className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
-                >
-                  <FaBookmark className="text-lg" />
-                </a>
+                {/* Bookmarks removed */}
 
                 {/* User Profile Menu */}
                 <div className="relative">

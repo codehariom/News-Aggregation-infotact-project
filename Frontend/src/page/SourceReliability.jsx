@@ -16,7 +16,6 @@ const SourceReliability = () => {
       category: "International",
       reliabilityScore: 95,
       factCheckAccuracy: 98,
-      biasRating: "Center",
       lastUpdated: "2024-01-15",
       description: "British Broadcasting Corporation - International news service"
     },
@@ -27,7 +26,6 @@ const SourceReliability = () => {
       category: "International",
       reliabilityScore: 94,
       factCheckAccuracy: 97,
-      biasRating: "Center",
       lastUpdated: "2024-01-14",
       description: "International news agency providing business and political news"
     },
@@ -38,7 +36,6 @@ const SourceReliability = () => {
       category: "International",
       reliabilityScore: 93,
       factCheckAccuracy: 96,
-      biasRating: "Center",
       lastUpdated: "2024-01-13",
       description: "American non-profit news agency"
     },
@@ -49,7 +46,6 @@ const SourceReliability = () => {
       category: "National",
       reliabilityScore: 88,
       factCheckAccuracy: 92,
-      biasRating: "Center-Left",
       lastUpdated: "2024-01-12",
       description: "American daily newspaper based in New York City"
     },
@@ -60,7 +56,6 @@ const SourceReliability = () => {
       category: "National",
       reliabilityScore: 87,
       factCheckAccuracy: 91,
-      biasRating: "Center-Left",
       lastUpdated: "2024-01-11",
       description: "American daily newspaper published in Washington, D.C."
     },
@@ -71,7 +66,6 @@ const SourceReliability = () => {
       category: "National",
       reliabilityScore: 82,
       factCheckAccuracy: 85,
-      biasRating: "Center-Left",
       lastUpdated: "2024-01-10",
       description: "American multinational news-based pay television channel"
     },
@@ -82,7 +76,6 @@ const SourceReliability = () => {
       category: "National",
       reliabilityScore: 75,
       factCheckAccuracy: 78,
-      biasRating: "Center-Right",
       lastUpdated: "2024-01-09",
       description: "American multinational conservative news channel"
     },
@@ -93,7 +86,6 @@ const SourceReliability = () => {
       category: "International",
       reliabilityScore: 85,
       factCheckAccuracy: 88,
-      biasRating: "Center",
       lastUpdated: "2024-01-08",
       description: "Qatar-based international news channel"
     },
@@ -104,7 +96,6 @@ const SourceReliability = () => {
       category: "International",
       reliabilityScore: 86,
       factCheckAccuracy: 89,
-      biasRating: "Center-Left",
       lastUpdated: "2024-01-07",
       description: "British daily newspaper"
     },
@@ -115,7 +106,6 @@ const SourceReliability = () => {
       category: "National",
       reliabilityScore: 89,
       factCheckAccuracy: 93,
-      biasRating: "Center",
       lastUpdated: "2024-01-06",
       description: "American privately and publicly funded non-profit media organization"
     }
@@ -183,15 +173,6 @@ const SourceReliability = () => {
     if (score >= 80) return "Good";
     if (score >= 70) return "Fair";
     return "Poor";
-  };
-
-  const getBiasColor = (bias) => {
-    switch (bias) {
-      case "Center": return "text-gray-600 bg-gray-100";
-      case "Center-Left": return "text-blue-600 bg-blue-100";
-      case "Center-Right": return "text-red-600 bg-red-100";
-      default: return "text-gray-600 bg-gray-100";
-    }
   };
 
   return (
@@ -307,18 +288,16 @@ const SourceReliability = () => {
                 <div key={source.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition duration-300">
                   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex-1">
-                      <div className="flex items-start justify-between mb-3">
+                      <div className="Center items-start justify-between mb-3">
                         <div>
                           <h3 className="text-xl font-semibold text-gray-800 mb-1">{source.name}</h3>
                           <p className="text-gray-600 text-sm mb-2">{source.description}</p>
                         </div>
-                        <div className="flex flex-col items-end space-y-2">
-                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${getReliabilityColor(source.reliabilityScore)}`}>
+                        <div className="flex flex-col items-start space-y-2">
+                          <span className={`px-3 py-1  rounded-full text-sm font-medium ${getReliabilityColor(source.reliabilityScore)}`}>
                             {source.reliabilityScore}/100 - {getReliabilityLabel(source.reliabilityScore)}
                           </span>
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${getBiasColor(source.biasRating)}`}>
-                            {source.biasRating}
-                          </span>
+                          
                         </div>
                       </div>
                       
@@ -349,9 +328,6 @@ const SourceReliability = () => {
                       >
                         Visit Source
                       </a>
-                      <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition duration-300 text-center">
-                        View Details
-                      </button>
                     </div>
                   </div>
                 </div>

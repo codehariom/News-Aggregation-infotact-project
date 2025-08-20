@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   FaThumbsUp,
   FaThumbsDown,
-  FaEye,
   FaComment,
   FaLink,
   FaSearch,
@@ -34,8 +33,6 @@ const AnnotationForm = () => {
       date: "2023-08-17T10:58:25.046Z",
       likes: 12,
       dislikes: 2,
-      views: 156,
-      comments: 8,
     },
     {
       id: 2,
@@ -46,8 +43,6 @@ const AnnotationForm = () => {
       date: "2024-01-10T09:40:00.000Z",
       likes: 45,
       dislikes: 5,
-      views: 342,
-      comments: 23,
     },
     {
       id: 3,
@@ -58,8 +53,6 @@ const AnnotationForm = () => {
       date: "2025-08-01T14:15:00.000Z",
       likes: 28,
       dislikes: 3,
-      views: 198,
-      comments: 15,
     },
   ];
 
@@ -97,8 +90,6 @@ const AnnotationForm = () => {
       date: new Date().toISOString(),
       likes: 0,
       dislikes: 0,
-      views: 0,
-      comments: 0,
     };
     setAnnotations((prev) =>
       [newAnnotation, ...prev].sort((a, b) =>
@@ -278,10 +269,6 @@ const AnnotationForm = () => {
                       <FaCalendar />
                       {formatDate(anno.date)}
                     </span>
-                    <span className="flex items-center gap-1">
-                      <FaEye />
-                      {formatNumber(anno.views)} views
-                    </span>
                   </div>
                 </div>
               </div>
@@ -336,17 +323,8 @@ const AnnotationForm = () => {
                     <FaThumbsDown className={anno.dislikes > 0 ? 'text-red-500' : ''} />
                     <span className="font-medium">{formatNumber(anno.dislikes)}</span>
                   </button>
-
-                  <button className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors">
-                    <FaComment />
-                    <span className="font-medium">{formatNumber(anno.comments)}</span>
-                  </button>
                 </div>
-
-                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2">
-                  <FaComment />
-                  Reply
-                </button>
+                
               </div>
             </div>
           ))}
