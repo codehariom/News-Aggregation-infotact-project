@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose"
 
 const articleSchema = new mongoose.Schema(
   {
@@ -37,9 +37,6 @@ const articleSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    imageUrl: {
-      type: String,
-    },
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
@@ -59,6 +56,6 @@ const articleSchema = new mongoose.Schema(
 
 articleSchema.index({ title: 'text', summary: 'text', content: 'text' });
 
-module.exports = mongoose.model('Article', articleSchema);
+export const Article = mongoose.model('Article', articleSchema);
 
 

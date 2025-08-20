@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose"
 
 const sourceSchema = new mongoose.Schema(
   {
@@ -45,6 +45,6 @@ const sourceSchema = new mongoose.Schema(
 
 sourceSchema.index({ name: 'text', description: 'text' });
 
-module.exports = mongoose.model('Source', sourceSchema);
+export const Source= mongoose.model('Source', sourceSchema);
 
 

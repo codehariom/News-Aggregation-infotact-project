@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from"mongoose"
 
 const factCheckSchema = new mongoose.Schema(
   {
@@ -78,6 +78,6 @@ const factCheckSchema = new mongoose.Schema(
 
 factCheckSchema.index({ title: 'text', content: 'text', evidence: 'text' });
 
-module.exports = mongoose.model('FactCheck', factCheckSchema);
+export const FactCheck= mongoose.model('FactCheck', factCheckSchema);
 
 

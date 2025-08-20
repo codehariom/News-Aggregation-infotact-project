@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose"
 
 const annotationSchema = new mongoose.Schema(
   {
@@ -44,6 +44,6 @@ const annotationSchema = new mongoose.Schema(
 
 annotationSchema.index({ comment: 'text', tags: 1 });
 
-module.exports = mongoose.model('Annotation', annotationSchema);
+export const Annotation = mongoose.model('Annotation', annotationSchema);
 
 
