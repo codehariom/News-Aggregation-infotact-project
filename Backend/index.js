@@ -46,4 +46,11 @@ app.use(express.urlencoded({extended:true,limit:"200kb"}))
 //routes
 
 
-//api version
+
+// //api version
+// app.use("/api/user")
+// app.use("/api/news")
+// app.use("/api/admin")
+// app.use("/api/article")
+
+
