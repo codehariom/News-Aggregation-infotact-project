@@ -1,88 +1,82 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 @import "tailwindcss";
+/* Custom styles inside Tailwind layer */
+@layer components {
+  .annotation-container {
+    @apply max-w-2xl mx-auto p-5 font-sans;
+    font-family: "Poppins", sans-serif;
+  }
 
-
-.annotation-container {
-  @apply max-w-2xl mx-auto p-5 font-poppins;
-}
-
-.form-header {
-  @apply flex justify-between items-center flex-wrap gap-2.5;
-}
-
-.sort-dropdown {
-  @apply p-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600;
-}
-
-.annotation-form input,
-.annotation-form textarea {
-  @apply w-full p-2.5 my-2 text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600;
-}
-
-.annotation-form input::placeholder,
-.annotation-form textarea::placeholder {
-  @apply text-gray-400 italic;
-}
-
-.annotation-form button {
-  @apply px-5 py-2.5 text-base bg-blue-600 text-white border-none rounded-md cursor-pointer transition-colors duration-300 hover:bg-blue-700;
-}
-
-.recent-title {
-  @apply mt-8 mb-2.5 font-bold text-lg;
-}
-
-.annotation-list {
-  @apply flex flex-col gap-4;
-}
-
-.annotation-card {
-  @apply border border-gray-200 rounded-lg p-4 bg-gray-50 shadow-sm transition-all duration-200 hover:bg-blue-50 hover:shadow-md;
-}
-
-.annotation-header {
-  @apply flex justify-between text-sm font-semibold mb-2;
-}
-
-.annotation-card p {
-  @apply my-1.5 text-sm;
-}
-
-.tags {
-  @apply mt-1.5;
-}
-
-.tag {
-  @apply inline-block bg-gray-200 px-2 py-1 rounded-full text-xs mr-1.5;
-}
-
-.actions {
-  @apply mt-2.5 flex gap-3 text-sm items-center flex-wrap;
-}
-
-.comment-btn {
-  @apply ml-auto bg-transparent border border-gray-400 rounded px-2.5 py-1.5 cursor-pointer transition-colors duration-300 hover:bg-gray-200;
-}
-
-@media (max-width: 600px) {
   .form-header {
-    @apply flex-col items-stretch;
+    @apply flex justify-between items-center flex-wrap gap-2.5;
+  }
+
+  .sort-dropdown {
+    @apply p-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600;
+  }
+
+  .annotation-form input,
+  .annotation-form textarea {
+    @apply w-full p-2.5 my-2 text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600;
+  }
+
+  .annotation-form input::placeholder,
+  .annotation-form textarea::placeholder {
+    @apply text-gray-400 italic;
+  }
+
+  .annotation-form button {
+    @apply px-5 py-2.5 text-base bg-blue-600 text-white rounded-md cursor-pointer transition-colors duration-300 hover:bg-blue-700;
+  }
+
+  .recent-title {
+    @apply mt-8 mb-2.5 font-bold text-lg;
+  }
+
+  .annotation-list {
+    @apply flex flex-col gap-4;
+  }
+
+  .annotation-card {
+    @apply border border-gray-200 rounded-lg p-4 bg-gray-50 shadow-sm transition-all duration-200 hover:bg-blue-50 hover:shadow-md;
+  }
+
+  .annotation-header {
+    @apply flex justify-between text-sm font-semibold mb-2;
+  }
+
+  .annotation-card p {
+    @apply my-1.5 text-sm;
+  }
+
+  .tags {
+    @apply mt-1.5;
+  }
+
+  .tag {
+    @apply inline-block bg-gray-200 px-2 py-1 rounded-full text-xs mr-1.5;
   }
 
   .actions {
-    @apply flex-col items-start;
+    @apply mt-2.5 flex gap-3 text-sm items-center flex-wrap;
   }
 
   .comment-btn {
+    @apply ml-auto bg-transparent border border-gray-400 rounded px-2.5 py-1.5 cursor-pointer transition-colors duration-300 hover:bg-gray-200;
+  }
 
-    @apply w-full ml-0;
+  @media (max-width: 600px) {
+    .form-header {
+      @apply flex-col items-stretch;
+    }
+
+    .actions {
+      @apply flex-col items-start;
+    }
+
+    .comment-btn {
+      @apply w-full ml-0;
+    }
   }
 }
-
-    
-

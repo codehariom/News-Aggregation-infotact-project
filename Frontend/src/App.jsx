@@ -1,11 +1,9 @@
-import React from "./page/React";
-import React from "react";
+// import React from "./page/React";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./page/Home";
 import Login from "./page/Login";
 import Register from "./page/Register";
-import UserDashboard from "./UserDashboard";
-import AdminDashboard from"./AdminDashboard";
+// import UserDashboard from "./UserDashboard";
 import UserProfile from "./page/UserProfile";
 import SubmitArticleForm from "./page/SubmitArticle";
 import NewsFeed from "./page/NewsFeed";
