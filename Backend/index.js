@@ -11,7 +11,7 @@ dotenv.config()
 
 // config cors 
 const allowedOrigins = [
-  'http://localhost:5173',
+  'http://localhost:5174',
   // live server url
   // 'https://clickurl-r72u.onrender.com'
 ]; 
@@ -28,7 +28,7 @@ app.use(cors({
 }))
 
 //ports
-const port = process.env.PORT || 8001
+const port = process.env.PORT || 7001
 
 // CONNECTING DB
 connectDb().then(()=>{
@@ -44,11 +44,12 @@ app.use(express.json({limit:"200kb"}))
 app.use(express.urlencoded({extended:true,limit:"200kb"}))
 
 //routes
+import userRoute from "../Backend/Routes/userRoute.js"
 
 
 
 // //api version
-// app.use("/api/user")
+app.use("/api/user",userRoute)
 // app.use("/api/news")
 // app.use("/api/admin")
 // app.use("/api/article")
