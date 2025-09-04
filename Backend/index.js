@@ -1,5 +1,6 @@
 import express from "express"
 import connectDb from "./Database/database.js"
+import myContribRoutes from "./Routes/MyContribution.js";
 import dotenv from "dotenv"
 import cors from "cors"
 
@@ -11,7 +12,7 @@ dotenv.config()
 
 // config cors 
 const allowedOrigins = [
-  'http://localhost:5174',
+  'http://localhost:5173',
   // live server url
   // 'https://clickurl-r72u.onrender.com'
 ]; 
@@ -28,7 +29,7 @@ app.use(cors({
 }))
 
 //ports
-const port = process.env.PORT || 7001
+const port = process.env.PORT || 8001
 
 // CONNECTING DB
 connectDb().then(()=>{
@@ -41,15 +42,15 @@ connectDb().then(()=>{
 
 // middleware 
 app.use(express.json({limit:"200kb"}))
+app.use("/api/my-contributions", myContribRoutes);
 app.use(express.urlencoded({extended:true,limit:"200kb"}))
 
 //routes
-import userRoute from "../Backend/Routes/userRoute.js"
 
 
 
 // //api version
-app.use("/api/user",userRoute)
+// app.use("/api/user")
 // app.use("/api/news")
 // app.use("/api/admin")
 // app.use("/api/article")

@@ -6,6 +6,7 @@ import Register from "./page/Register";
 // import UserDashboard from "./UserDashboard";
 import UserProfile from "./page/UserProfile";
 import SubmitArticleForm from "./page/SubmitArticle";
+import MyContribution from "./page/MyContribution";
 import NewsFeed from "./page/NewsFeed";
 import ArticleDetails from "./page/ArticleDeatails";
 import FactCheckInterface from "./components/FactCheckingInterface";
@@ -32,6 +33,7 @@ function App() {
         <Route path="/source-reliability" element={<SourceReliability />} /> 
         <Route path="/source-management" element={<SourceManagement />} />  
         <Route path="/submit-article" element={<SubmitArticleForm />} /> 
+        <Route path="/my-contributions" element={<MyContribution />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
