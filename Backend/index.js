@@ -1,58 +1,50 @@
-import express from "express"
-import connectDb from "./Database/database.js"
+import express from "express";
+import connectDb from "./Database/database.js";
+import dotenv from "dotenv";
+import cors from "cors";
+
+// Routes
 import myContribRoutes from "./Routes/MyContribution.js";
-import dotenv from "dotenv"
-import cors from "cors"
+import factCheckRoutes from "./Routes/FactCheckRoute.js";
 
 // express app 
-const app = express()
+const app = express();
 
 //config env
-dotenv.config()
+dotenv.config();
 
 // config cors 
 const allowedOrigins = [
-  'http://localhost:5173',
-  // live server url
-  // 'https://clickurl-r72u.onrender.com'
-]; 
+  "http://localhost:5173",
+];
 
 app.use(cors({
-    origin:function(origin,callback){
-        if(!origin || allowedOrigins.includes(origin)){
-            callback(null,true)
-        } else{
-            callback(new Error("Not allowed by cors "))
+    origin: function(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by cors "));
         }
     },
-    credentials:true
-}))
+    credentials: true,
+}));
 
 //ports
-const port = process.env.PORT || 8001
+const port = process.env.PORT || 8000;
 
 // CONNECTING DB
-connectDb().then(()=>{
-    app.listen(port,()=>{
-        console.log(`Server is running on ${port}`)
+connectDb().then(() => {
+    app.listen(port, () => {
+        console.log(`Server is running on ${port}`);
     });
-}).catch(error=>{
-    console.error("Failed to connect db",error)
-})
+}).catch(error => {
+    console.error("Failed to connect db", error);
+});
 
 // middleware 
-app.use(express.json({limit:"200kb"}))
+app.use(express.json({ limit: "200kb" }));
+app.use(express.urlencoded({ extended: true, limit: "200kb" }));
+
+// routes
 app.use("/api/my-contributions", myContribRoutes);
-app.use(express.urlencoded({extended:true,limit:"200kb"}))
-
-//routes
-
-
-
-// //api version
-// app.use("/api/user")
-// app.use("/api/news")
-// app.use("/api/admin")
-// app.use("/api/article")
-
-
+app.use("/api", factCheckRoutes);
