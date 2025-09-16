@@ -1,6 +1,6 @@
 import FactCheck from "../models/FactCheck.js";
 
-// ✅ GET /api/fact-checking
+
 export const getFactChecks = async (req, res) => {
   try {
     const factChecks = await FactCheck.find().sort({ createdAt: -1 });
@@ -11,7 +11,6 @@ export const getFactChecks = async (req, res) => {
   }
 };
 
-// ✅ POST /api/submit-facts
 export const submitFacts = async (req, res) => {
   try {
     const { article, sourceDomain, claims, confidence, notes } = req.body;

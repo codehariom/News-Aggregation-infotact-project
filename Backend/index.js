@@ -1,8 +1,8 @@
 import express from "express";
 import connectDb from "./Database/database.js";
+import sourceRoutes from "./Routes/sourceRoutes.js";  
 import dotenv from "dotenv";
 import cors from "cors";
-
 // Routes
 import myContribRoutes from "./Routes/MyContribution.js";
 import factCheckRoutes from "./Routes/FactCheckRoute.js";
@@ -48,3 +48,4 @@ app.use(express.urlencoded({ extended: true, limit: "200kb" }));
 // routes
 app.use("/api/my-contributions", myContribRoutes);
 app.use("/api", factCheckRoutes);
+app.use("/api/sources", sourceRoutes);
