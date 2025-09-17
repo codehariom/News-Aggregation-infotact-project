@@ -1,4 +1,5 @@
-import mongoose from "mongoose"
+// Backend/Models/Article.model.js
+import mongoose from "mongoose";
 
 const articleSchema = new mongoose.Schema(
   {
@@ -17,14 +18,35 @@ const articleSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    sourceUrl: {
+    url: {
       type: String,
       required: true,
+      unique: true,
       trim: true,
     },
+    imageUrl: {
+      type: String,
+    },
+    authorName: {
+      type: String,
+    }, // optional plain name
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    }, // optional ref
+
+    // source info
+    source: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Source",
+    },
+    sourceDomain: {
+      type: String,
+    }, // e.g., bbc.com
+
     category: {
       type: String,
-      default: 'Other',
+      default: "Other",
     },
     tags: [
       {
@@ -33,29 +55,41 @@ const articleSchema = new mongoose.Schema(
         trim: true,
       },
     ],
-    publishDate: {
-      type: Date,
-      default: Date.now,
+    language: {
+      type: String,
+      default: "en",
     },
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    },
+
+    // status
     status: {
       type: String,
-      enum: ['submitted', 'approved', 'rejected'],
-      default: 'submitted',
+      enum: ["draft", "under_review", "published", "rejected", "removed"],
+      default: "under_review",
       index: true,
+    },
+
+    // metadata
+    reliabilityScore: {
+      type: Number,
+      min: 0,
+      max: 100,
+      default: 50,
+    },
+    annotationsCount: {
+      type: Number,
+      default: 0,
     },
     readTimeMinutes: {
       type: Number,
     },
+
+    // dates
+    publishedAt: { type: Date },
   },
   { timestamps: true }
 );
 
-articleSchema.index({ title: 'text', summary: 'text', content: 'text' });
+// 🔎 Text index for searching
+articleSchema.index({ title: "text", summary: "text", content: "text" });
 
-export const Article = mongoose.model('Article', articleSchema);
-
-
+export default mongoose.model("Article", articleSchema);

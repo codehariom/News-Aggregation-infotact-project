@@ -6,6 +6,8 @@ import cors from "cors";
 // Routes
 import myContribRoutes from "./Routes/MyContribution.js";
 import factCheckRoutes from "./Routes/FactCheckRoute.js";
+import articleRoutes from "./Routes/articleRoutes.js";
+
 
 // express app 
 const app = express();
@@ -49,3 +51,5 @@ app.use(express.urlencoded({ extended: true, limit: "200kb" }));
 app.use("/api/my-contributions", myContribRoutes);
 app.use("/api", factCheckRoutes);
 app.use("/api/sources", sourceRoutes);
+app.use("/api/articles", articleRoutes);
+
