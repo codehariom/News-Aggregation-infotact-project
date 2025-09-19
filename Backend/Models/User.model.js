@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
@@ -25,8 +25,8 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'moderator', 'admin'],
-      default: 'user',
+      enum: ["user", "moderator", "admin"],
+      default: "user",
       index: true,
     },
     reputation: {
@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
     subscriptions: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Source',
+        ref: "Source",
       },
     ],
     joinDate: {
@@ -60,8 +60,6 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-userSchema.index({ username: 'text', email: 'text' });
-
-export const User = mongoose.model('User', userSchema);
-
-
+// ✅ Export sahi tareeke se
+const User = mongoose.models.User || mongoose.model("User", userSchema);
+export default User;

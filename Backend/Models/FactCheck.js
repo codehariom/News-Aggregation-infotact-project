@@ -13,25 +13,17 @@ const claimSchema = new mongoose.Schema(
   { _id: false }
 );
 
+
 const factCheckSchema = new mongoose.Schema(
   {
-    article: { type: mongoose.Schema.Types.ObjectId, ref: "Article" }, // optional
-    sourceDomain: String, // example.com
-    claims: { type: [claimSchema], default: [] },
-    confidence: { type: Number, min: 0, max: 100, default: 50 },
-    notes: String,
-    submittedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    status: {
-      type: String,
-      enum: ["pending", "approved", "rejected"],
-      default: "pending",
-    },
-    votes: {
-      up: { type: Number, default: 0 },
-      down: { type: Number, default: 0 },
-    },
+    claim: { type: String, required: true, trim: true },
+    verdict: { type: String, enum: ["true", "false", "misleading", "unverified"], default: "unverified" },
+    evidence: { type: String, trim: true },
+    reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("FactCheck", factCheckSchema);
+// ✅ Overwrite error avoid karne ka fix
+export default mongoose.models.FactCheck || mongoose.model("FactCheck", factCheckSchema);
